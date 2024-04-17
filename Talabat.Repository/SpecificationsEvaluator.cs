@@ -17,7 +17,7 @@ namespace Talabat.Repository
 			var query = inputQuery;  //_dbContext.Set<Product>()
 
 			if(spec.Criteria is not null)  // P => P.Id == 1
-				query.Where(spec.Criteria);
+				query = query.Where(spec.Criteria);
 
 			// query = _dbContext.Set<Product>().Where(P => P.Id == 1)
 			
