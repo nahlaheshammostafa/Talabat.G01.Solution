@@ -42,8 +42,8 @@ namespace Talabat.Repository.Data
 			}
 			if (_dbContext.Products.Count() == 0)
 			{
-				var productData = File.ReadAllText("../Talabat.Repository/Data/DataSeed/products.json");
-				var products = JsonSerializer.Deserialize<List<Product>>(productData);
+				var productsData = File.ReadAllText("../Talabat.Repository/Data/DataSeed/products.json");
+				var products = JsonSerializer.Deserialize<List<Product>>(productsData);
 
 				if (products?.Count > 0)
 				{
