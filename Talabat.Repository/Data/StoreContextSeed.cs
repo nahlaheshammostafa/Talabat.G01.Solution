@@ -40,6 +40,20 @@ namespace Talabat.Repository.Data
 					await _dbContext.SaveChangesAsync();
 				}
 			}
+			if (_dbContext.Products.Count() == 0)
+			{
+				var productsData = File.ReadAllText("../Talabat.Repository/Data/DataSeed/products.json");
+				var products = JsonSerializer.Deserialize<List<Product>>(productsData);
+
+				if (products?.Count > 0)
+				{
+					foreach (var product in products)
+					{
+						_dbContext.Set<Product>().Add(product);
+					}
+					await _dbContext.SaveChangesAsync();
+				}
+			}
 		}
 	}
 }

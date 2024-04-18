@@ -1,5 +1,10 @@
 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Talabat.APIs.Errors;
+using Talabat.APIs.Extensions;
+using Talabat.APIs.Helpers;
+using Talabat.APIs.Middlewares;
 using Talabat.Core.Repositories.Contract;
 using Talabat.Repository;
 using Talabat.Repository.Data;
@@ -20,16 +25,14 @@ namespace Talabat.APIs
 			//Rejister Required Web APIs services to the DI container.
 
 
-			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-			webApplicationBuilder.Services.AddEndpointsApiExplorer();
-			webApplicationBuilder.Services.AddSwaggerGen(); 
+			webApplicationBuilder.Services.AddSwaggerServices();
 
 			webApplicationBuilder.Services.AddDbContext<StoreContext>(options => 
 			{
 				options.UseSqlServer(webApplicationBuilder.Configuration.GetConnectionString("DefaultConnection"));
 			});
 
-			webApplicationBuilder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+			webApplicationBuilder.Services.AddApplicationServices();
 			#endregion
 
 			var app = webApplicationBuilder.Build();
@@ -52,16 +55,22 @@ namespace Talabat.APIs
 			}
 
 			#region Configure Kestrel Middlewares
+
+			app.UseMiddleware<ExceptionMiddleware>();
+
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
 			{
-				app.UseSwagger();
-				app.UseSwaggerUI();
+				app.UseSwaggerMiddlewares();
 			}
+
+			app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
 			app.UseHttpsRedirection();
 
 			app.MapControllers(); 
+
+			app.UseStaticFiles();
 			#endregion
 
 			app.Run();
