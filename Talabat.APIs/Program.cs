@@ -9,9 +9,11 @@ using Talabat.APIs.Helpers;
 using Talabat.APIs.Middlewares;
 using Talabat.Core.Entities.Identity;
 using Talabat.Core.Repositories.Contract;
+using Talabat.Core.Services.Contract;
 using Talabat.Repository;
 using Talabat.Repository._Identity;
 using Talabat.Repository.Data;
+using Talabat.Service.AuthService;
 
 namespace Talabat.APIs
 {
@@ -56,6 +58,8 @@ namespace Talabat.APIs
 				//options.Password.RequireUppercase = true;
 			})
 				.AddEntityFrameworkStores<ApplicationIdentityDbContext>();
+
+			webApplicationBuilder.Services.AddScoped(typeof(IAuthService),typeof(AuthService));
 
 			#endregion
 
