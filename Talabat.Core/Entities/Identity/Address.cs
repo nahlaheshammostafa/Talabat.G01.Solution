@@ -1,4 +1,6 @@
-﻿namespace Talabat.Core.Entities.Identity
+﻿using System.Text.Json.Serialization;
+
+namespace Talabat.Core.Entities.Identity
 {
 	public class Address : BaseEntity
 	{
