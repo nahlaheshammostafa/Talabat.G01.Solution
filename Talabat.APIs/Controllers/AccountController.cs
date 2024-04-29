@@ -96,5 +96,20 @@ namespace Talabat.APIs.Controllers
 			var user = await _userManager.FindUserWithAddressAsync(User);
 			return Ok(_mapper.Map<AddressDto>(user.Address));
 		}
+
+		[Authorize]
+		[HttpPut("address")]  // PUT : api/Account/address
+		public async Task<ActionResult<Address>> UpdateUserAddress(AddressDto address)
+		{
+			var updateAddress = _mapper.Map<Address>(address);
+			var user = await _userManager.FindUserWithAddressAsync(User);
+
+			updateAddress.Id = user.Address.Id;
+			user.Address = updateAddress;
+			var result = await _userManager.UpdateAsync(user);
+			if(!result.Succeeded) return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors.Select(E => E.Description) });
+
+			return Ok(result);
+		}
 	}
 }
