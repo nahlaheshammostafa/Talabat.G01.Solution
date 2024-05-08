@@ -2,6 +2,8 @@
 using Talabat.APIs.Dtos;
 using Talabat.Core.Entities;
 using Talabat.Core.Entities.Identity;
+using Talabat.Core.Entities.OrderAggregate;
+using Address = Talabat.Core.Entities.Identity.Address;
 
 namespace Talabat.APIs.Helpers
 {
@@ -17,6 +19,21 @@ namespace Talabat.APIs.Helpers
 			CreateMap<CustomerBasketDto, CustomerBasket>();
 			CreateMap<BasketItemDto, BasketItem>();
 			CreateMap<Address, AddressDto>().ReverseMap();
+
+			CreateMap<AddressDto, Talabat.Core.Entities.OrderAggregate.Address>();
+
+			CreateMap<Order, OrderToReturnDto>()
+				.ForMember(d => d.DeliveryMethod, O => O .MapFrom(S => S.DeliveryMethod.ShortName))
+			    .ForMember(d => d.DeliverMethodCost, O => O.MapFrom(S => S.DeliveryMethod.Cost));
+
+			CreateMap<OrderItem, OrderItemDto>()
+				.ForMember(d => d.ProductId, O => O.MapFrom(S => S.Product.ProductId))
+				.ForMember(d => d.ProductName, O => O.MapFrom(S => S.Product.ProductName))
+				.ForMember(d => d.PictureUrl, O => O.MapFrom(S => S.Product.PictureUrl))
+				.ForMember(d => d.PictureUrl, O => O.MapFrom<OrderItemPictureResolver>());
+			    
+
+
 
 		}
 	}
