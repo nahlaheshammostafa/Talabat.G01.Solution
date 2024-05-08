@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Talabat.Core.Entities;
 using Talabat.Core.Entities.OrderAggregate;
-using Order = Talabat.Core.Entities.OrderAggregate.Order;
+//using Order = Talabat.Core.Entities.OrderAggregate.Order;
 
 namespace Talabat.Repository.Data
 {
@@ -26,7 +26,7 @@ namespace Talabat.Repository.Data
 		public DbSet<ProductBrand> ProductBrands { get; set; }
 		public DbSet<ProductCategory> ProductCategories { get; set; }
 
-		public DbSet<Order> Orders { get; set; }
+		public DbSet<Core.Entities.OrderAggregate.Order> Orders { get; set; }
 		public DbSet<OrderItem> OrderItems { get; set; }
 		public DbSet<DeliveryMethod> DeliveryMethods { get; set;}
 	}
