@@ -21,8 +21,8 @@ namespace Talabat.APIs.Controllers
 			_mapper = mapper;
 		}
 
-		//[ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
-		//[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
 		[HttpPost]  // POST: /api/Orders
 		public async Task<ActionResult<Order>> CreateOrder(OrderDto orderDto)
 		{
@@ -30,6 +30,14 @@ namespace Talabat.APIs.Controllers
 			var order = await _orderService.CreateOrderAsync(orderDto.BuyerEmail, orderDto.BasketId, orderDto.DeliveryMethodId, address);
 			if (order is null) return BadRequest(new ApiResponse(400));
 			return Ok(order);
+		}
+
+
+		[HttpGet] // GET: /api/Orders?email=nahla@gmail.com
+		public async Task<ActionResult<IReadOnlyList<Order>>> GetOrderForUser(string email)
+		{
+			var orders = await _orderService.GetOrdersForUserAsync(email);
+			return Ok(orders);
 		}
 	}
 }
