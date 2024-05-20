@@ -16,6 +16,6 @@ namespace Talabat.APIs.Dtos
 		public ICollection<OrderItemDto> Items { get; set; } = new HashSet<OrderItemDto>();  //Navigation Property [Many]
 		public decimal Subtotal { get; set; }
 		public decimal Total { get; set; }
-		public string PaymentIntenId { get; set; } = string.Empty;
+		public string PaymentIntentId { get; set; } = string.Empty;
 	}
 }
