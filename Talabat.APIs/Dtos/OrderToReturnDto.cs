@@ -11,7 +11,7 @@ namespace Talabat.APIs.Dtos
 		public decimal DeliverMethodCost  { get; set; }
 		public Address ShippingAddress { get; set; } = null!;
 
-		//public int? DeliveryMethodId { get; set; }    // Foreign Key
+		public int? DeliveryMethodId { get; set; }    // Foreign Key
 		public string DeliveryMethod { get; set; } = null!;   //Navigation Property [ONE]
 		public ICollection<OrderItemDto> Items { get; set; } = new HashSet<OrderItemDto>();  //Navigation Property [Many]
 		public decimal Subtotal { get; set; }

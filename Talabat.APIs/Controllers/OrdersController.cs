@@ -7,6 +7,7 @@ using Talabat.APIs.Dtos;
 using Talabat.APIs.Errors;
 using Talabat.Core.Entities.OrderAggregate;
 using Talabat.Core.Services.Contract;
+using Order = Talabat.Core.Entities.OrderAggregate.Order;
 
 namespace Talabat.APIs.Controllers
 {
@@ -32,7 +33,7 @@ namespace Talabat.APIs.Controllers
 			var address = _mapper.Map<AddressDto, Address>(orderDto.ShippingAddress);
 			var order = await _orderService.CreateOrderAsync(orderDto.BuyerEmail, orderDto.BasketId, orderDto.DeliveryMethodId, address);
 			if (order is null) return BadRequest(new ApiResponse(400));
-			return Ok(_mapper.Map<Core.Entities.OrderAggregate.Order, OrderToReturnDto>(order));
+			return Ok(_mapper.Map<Order, OrderToReturnDto>(order));
 		}
 
 

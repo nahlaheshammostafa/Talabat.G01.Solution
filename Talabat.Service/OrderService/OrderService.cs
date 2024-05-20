@@ -57,7 +57,8 @@ namespace Talabat.Service.OrderService
 			}
 
 			// 3. calculate SubTotal
-			var subTotal = orderItems.Sum(item => item.Price * item.Quantity);
+			var subTotal = orderItems.Sum(OrderItem => OrderItem.Price * OrderItem.Quantity);
+			
 			// 5. Create Order
 			var order = new Order(
 				buyerEmail: buyerEmail,
