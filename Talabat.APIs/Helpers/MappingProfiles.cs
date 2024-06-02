@@ -24,7 +24,8 @@ namespace Talabat.APIs.Helpers
 
 			CreateMap<Order, OrderToReturnDto>()
 				.ForMember(d => d.DeliveryMethod, O => O .MapFrom(S => S.DeliveryMethod.ShortName))
-			    .ForMember(d => d.DeliverMethodCost, O => O.MapFrom(S => S.DeliveryMethod.Cost));
+			    .ForMember(d => d.DeliverMethodCost, O => O.MapFrom(S => S.DeliveryMethod.Cost))
+			    .ForMember(d => d.Total, O => O.MapFrom(S => S.GetTotal()));
 
 			CreateMap<OrderItem, OrderItemDto>()
 				.ForMember(d => d.ProductId, O => O.MapFrom(S => S.Product.ProductId))

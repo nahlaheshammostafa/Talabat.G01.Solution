@@ -32,25 +32,28 @@ namespace Talabat.Service.PaymentService
 		public async Task<CustomerBasket?> CreateOrUpdatePaymentIntent(string basketId)
 		{
 			StripeConfiguration.ApiKey = _configuration["StripeSettings:SecretKey"];
+
 			var basket = await _basketRepo.GetBasketAsync(basketId);
 			if (basket is null) return null;
 
 			var shippingPrice = 0m;
 
-			if(basket.DeliveryMethodId.HasValue)
+			if (basket.DeliveryMethodId.HasValue)
 			{
 				var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetAsync(basket.DeliveryMethodId.Value);
 				shippingPrice = deliveryMethod.Cost;
 				basket.ShippingPrice = shippingPrice;
 			}
 
-			if(basket.Items?.Count > 0)
+
+			if (basket.Items?.Count > 0)
 			{
-				var productRepo = _unitOfWork.Repository<Product>();
-				foreach(var item in basket.Items)
+				var productRepo = _unitOfWork.Repository<Core.Entities.Product>();
+
+				foreach (var item in basket.Items)
 				{
 					var product = await productRepo.GetAsync(item.Id);
-					if(item.Price != product.Price)
+					if (item.Price != product.Price)
 						item.Price = product.Price;
 				}
 			}
@@ -58,28 +61,31 @@ namespace Talabat.Service.PaymentService
 			PaymentIntent paymentIntent;
 			PaymentIntentService paymentIntentService = new PaymentIntentService();
 
-			if(string.IsNullOrEmpty(basket.PaymentIntentId))  //Create New Payment Intent
+			if (string.IsNullOrEmpty(basket.PaymentIntentId))
 			{
 				var options = new PaymentIntentCreateOptions()
 				{
 					Amount = (long)basket.Items.Sum(item => item.Price * 100 * item.Quantity) + (long)shippingPrice * 100,
 					Currency = "usd",
-					PaymentMethodTypes = new List<string>() { "card"}
+					PaymentMethodTypes = new List<string>() { "card" }
 				};
-				paymentIntent = await paymentIntentService.CreateAsync(options);  // Integration With Stripe
+
+				paymentIntent = await paymentIntentService.CreateAsync(options);
+
 				basket.PaymentIntentId = paymentIntent.Id;
 				basket.ClientSecret = paymentIntent.ClientSecret;
 			}
-			else  // Update Existing Payment Intent
+			else
 			{
 				var options = new PaymentIntentUpdateOptions()
 				{
-					Amount = (long)basket.Items.Sum(item => item.Price * 100 * item.Quantity) + (long)shippingPrice * 100,
+					Amount = (long)basket.Items.Sum(item => item.Price * 100 * item.Quantity) + (long)shippingPrice * 100
 				};
 				await paymentIntentService.UpdateAsync(basket.PaymentIntentId, options);
 			}
 
 			await _basketRepo.UpdateBasketAsync(basket);
+
 			return basket;
 		}
 	}
